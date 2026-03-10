@@ -11,7 +11,7 @@ int main() {
 
     printf("--- РЕЗУЛЬТАТ ОБЧИСЛЕНЬ ---\n");
     printPrice("Загальна сума       ", totalSum);
-    printPrice("Сума до оплати (заокр.)", roundedSum);
+    printPrice("Сума до оплати, хліб", roundedSum);
     printf("---------------------------\n");
 
     return 0;
