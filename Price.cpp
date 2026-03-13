@@ -1,64 +1,56 @@
 ﻿#include "Price.h"
 #include <stdio.h>
-#include <iostream>
 
-
-Price addPrices(Price price1, Price price2) {
-    Price result;
-    result.kop = price1.kop + price2.kop;
-    result.grn = price1.grn + price2.grn + (result.kop / 100);
-    result.kop %= 100;
-    return result;
+void addPrices(Price price1, Price price2, Price* result) {
+    if (!result) return;
+    int totalKop = price1.kop + price2.kop;
+    result->grn = price1.grn + price2.grn + (totalKop / 100);
+    result->kop = totalKop % 100;
 }
 
-Price multiplyPrice(Price price, int quantity) {
-    Price result;
+void multiplyPrice(Price price, int quantity, Price* result) {
+    if (!result) return;
     int totalKop = (price.grn * 100 + price.kop) * quantity;
-    result.grn = totalKop / 100;
-    result.kop = totalKop % 100;
-    return result;
+    result->grn = totalKop / 100;
+    result->kop = totalKop % 100;
 }
 
-Price roundPrice(Price price) {
-    short lastDigit = price.kop % 10;
+void roundPrice(Price* price) {
+    if (!price) return;
+    short lastDigit = price->kop % 10;
 
     if (lastDigit < 5) {
-        price.kop -= lastDigit;
-
-    }
-    else {
-        price.kop += (10 - lastDigit);
+        price->kop -= lastDigit;
+    } else {
+        price->kop += (10 - lastDigit);
     }
 
-    if (price.kop >= 100) {
-        price.grn += price.kop / 100;
-        price.kop = price.kop % 100;
+    if (price->kop >= 100) {
+        price->grn += price->kop / 100;
+        price->kop %= 100;
     }
-    return price;
 }
 
-Price calculateTotalFromFile(const char* filename) {
-    FILE* file = nullptr;
+void calculateTotalFromFile(const char* filename, Price* total) {
+    if (!total) return;
+    total->grn = 0;
+    total->kop = 0;
 
-    file = fopen(filename, "r");
-
-    Price total = { 0, 0 };
-
+    FILE* file = fopen(filename, "r");
     if (file == nullptr) {
         printf("Could not open file %s\n", filename);
-        return total;
+        return;
     }
 
     int grn, kop, quantity;
-
     while (fscanf(file, "%d %d %d", &grn, &kop, &quantity) != EOF) {
         Price item = { grn, (short int)kop };
-        Price subTotal = multiplyPrice(item, quantity);
-        total = addPrices(total, subTotal);
+        Price subTotal;
+        multiplyPrice(item, quantity, &subTotal);
+        addPrices(*total, subTotal, total);
     }
 
     fclose(file);
-    return total;
 }
 
 void printPrice(const char* label, Price price) {

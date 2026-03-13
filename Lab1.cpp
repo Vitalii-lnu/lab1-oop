@@ -1,13 +1,14 @@
-﻿#include <iostream>
-#include <stdio.h>
+﻿#include <stdio.h>
 #include "Price.h"
 
 int main() {
     const char* filename = "input.txt";
 
-    Price totalSum = calculateTotalFromFile(filename);
+    Price totalSum;
+    calculateTotalFromFile(filename, &totalSum);
 
-    Price roundedSum = roundPrice(totalSum);
+    Price roundedSum = totalSum; 
+    roundPrice(&roundedSum);
 
     printf("--- РЕЗУЛЬТАТ ОБЧИСЛЕНЬ ---\n");
     printPrice("Загальна сума       ", totalSum);

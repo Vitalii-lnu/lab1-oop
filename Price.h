@@ -5,11 +5,9 @@ struct Price {
     short int kop = 0;
 };
 
-// Functions
-Price addPrices(Price price1, Price price2);
-Price multiplyPrice(Price price, int quantity);
-Price roundPrice(Price price);
+void addPrices(Price price1, Price price2, Price* result);
+void multiplyPrice(Price price, int quantity, Price* result);
+void roundPrice(Price* price);
 void printPrice(const char* label, Price price);
 
-Price calculateTotalFromFile(const char* filename);
-
+void calculateTotalFromFile(const char* filename, Price* total);
